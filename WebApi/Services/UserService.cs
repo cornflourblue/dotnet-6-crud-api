@@ -1,4 +1,4 @@
-namespace WebApi.Services;
+﻿namespace WebApi.Services;
 
 using AutoMapper;
 using BCrypt.Net;
@@ -41,7 +41,7 @@ public class UserService : IUserService
     public void Create(CreateRequest model)
     {
         // validate
-        if (_context.Users.Any(x => x.Email == model.Email))
+        if (_context.Users.Any(user => user.Email == model.Email))
             throw new AppException("User with the email '" + model.Email + "' already exists");
 
         // map model to new user object
@@ -60,7 +60,7 @@ public class UserService : IUserService
         var user = getUser(id);
 
         // validate
-        if (model.Email != user.Email && _context.Users.Any(x => x.Email == model.Email))
+        if (model.Email != user.Email && _context.Users.Any(user => user.Email == model.Email))
             throw new AppException("User with the email '" + model.Email + "' already exists");
 
         // hash password if it was entered
@@ -85,7 +85,9 @@ public class UserService : IUserService
     private User getUser(int id)
     {
         var user = _context.Users.Find(id);
+        
         if (user == null) throw new KeyNotFoundException("User not found");
+        
         return user;
     }
 }

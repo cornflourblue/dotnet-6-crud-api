@@ -11,13 +11,13 @@ var builder = WebApplication.CreateBuilder(args);
  
     services.AddDbContext<DataContext>();
     services.AddCors();
-    services.AddControllers().AddJsonOptions(x =>
+    services.AddControllers().AddJsonOptions(options =>
     {
         // serialize enums as strings in api responses (e.g. Role)
-        x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 
         // ignore omitted parameters on models to enable optional params (e.g. User update)
-        x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     });
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -30,7 +30,7 @@ var app = builder.Build();
 // configure HTTP request pipeline
 {
     // global cors policy
-    app.UseCors(x => x
+    app.UseCors(cors => cors
         .AllowAnyOrigin()
         .AllowAnyMethod()
         .AllowAnyHeader());
@@ -41,4 +41,4 @@ var app = builder.Build();
     app.MapControllers();
 }
 
-app.Run("http://localhost:4000");
+app.Run("http://0.0.0.0:4000");

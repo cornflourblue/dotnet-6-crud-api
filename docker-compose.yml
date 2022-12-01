@@ -1,0 +1,20 @@
+version: '3'
+services:
+  dotnet6-crud-api-docker-template:
+    container_name: dotnet6-crud-api-docker-template
+    build:
+      context: .
+      dockerfile: Dockerfile
+    expose:
+      - 4000
+    # Uncomment the following lines in case the project is intended
+    # to run directly on localhost (and not behind a reverse proxy)
+    #ports:
+    #  - "4000:4000"
+    env_file:
+      - ./.env
+
+networks:
+  default:
+    name: nginx-proxy
+    external: true
