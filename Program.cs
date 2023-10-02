@@ -23,10 +23,17 @@ var builder = WebApplication.CreateBuilder(args);
 
     // configure DI for application services
     services.AddScoped<IUserService, UserService>();
+
+    // Add swagger support
+    services.AddEndpointsApiExplorer();
+    services.AddSwaggerGen();
 }
 
 var app = builder.Build();
 
+//Add Swagger support
+app.UseSwagger();
+app.UseSwaggerUI();
 // configure HTTP request pipeline
 {
     // global cors policy
@@ -41,4 +48,4 @@ var app = builder.Build();
     app.MapControllers();
 }
 
-app.Run("http://localhost:4000");
+app.Run("http://0.0.0.0:4000");
