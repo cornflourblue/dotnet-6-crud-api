@@ -30,6 +30,8 @@ public class ErrorHandlerMiddleware
             var response = context.Response;
             response.ContentType = "application/json";
 
+            var errorMessage = error?.Message;
+
             switch (error)
             {
                 case AppException e:
@@ -41,13 +43,14 @@ public class ErrorHandlerMiddleware
                     response.StatusCode = (int)HttpStatusCode.NotFound;
                     break;
                 default:
-                    // unhandled error
+                    // unhandled error with stackTrace
+                    errorMessage = $"Error: {error.Message}\n\nStackTrace:\n{error.StackTrace}";
                     _logger.LogError(error, error.Message);
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     break;
             }
 
-            var result = JsonSerializer.Serialize(new { message = error?.Message });
+            var result = JsonSerializer.Serialize(new { message = errorMessage });
             await response.WriteAsync(result);
         }
     }

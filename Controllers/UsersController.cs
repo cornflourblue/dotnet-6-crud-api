@@ -2,6 +2,7 @@
 
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using WebApi.Models.Users;
 using WebApi.Services;
 
@@ -11,6 +12,7 @@ public class UsersController : ControllerBase
 {
     private IUserService _userService;
     private IMapper _mapper;
+    private static readonly Random random = new Random();
 
     public UsersController(
         IUserService userService,
@@ -37,6 +39,11 @@ public class UsersController : ControllerBase
     [HttpPost]
     public IActionResult Create(CreateRequest model)
     {
+        //20% of requests return an error
+        if (random.NextDouble() < 0.2)
+        {
+            throw new ApplicationException("Oopss, Something gone wrong!");
+        }
         _userService.Create(model);
         return Ok(new { message = "User created" });
     }
